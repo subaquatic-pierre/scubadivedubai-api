@@ -27,36 +27,58 @@ RUN apt-get update \
   libgdk-pixbuf2.0-0 \
   shared-mime-info \
   mime-support \
+  curl \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /app/media /app/static \
-  && chown -R saleor:saleor /app/
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash \
+  && apt install nodejs -y
 
+COPY . /app
 COPY --from=build-python /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
 COPY --from=build-python /usr/local/bin/ /usr/local/bin/
-COPY . /app
 WORKDIR /app
 
-ARG STATIC_URL
-ENV STATIC_URL ${STATIC_URL:-/static/}
-RUN SECRET_KEY=dummy STATIC_URL=${STATIC_URL} python3 manage.py collectstatic --no-input
+EXPOSE 3000
 
-EXPOSE 8000
-ENV PYTHONUNBUFFERED 1
+# Environment vars for application, must be moved to secrets
+# ------
+ENV DATABASE_URL=postgres://scubadivedubai:ScubaDiveDubai0!@scubadivedubai-db.cluster-cguhuytcxcub.us-east-1.rds.amazonaws.com:5432/scubadivedubai_shop
+ENV EMAIL_URL=smtp://AKIAQPIWRSOPQGTLNIVV:BM1OBPMJzVv4V3rSvA2Zv663y9CzOgrrZNuRj4oR0SyY@email-smtp.us-east-1.amazonaws.com:587/?tls=True
+ENV DEFAULT_FROM_EMAIL=pierre@divesandybeach.com
+ENV STATIC_URL=/static/
+ENV MEDIA_URL=/media/
+ENV CREATE_IMAGES_ON_DEMAND=True
+ENV API_URI=https://api.scubadivedubai.com/graphql/
+ENV APP_MOUNT_URI=https://dashboard.scubadivedubai.com
+ENV JAEGER_AGENT_HOST=jaeger
+ENV REDIS_URL=redis://redis:6379/0
+ENV PORT=3000
+ENV PYTHONUNBUFFERED=1
+ENV PROCESSES=4
+ENV OPENEXCHANGERATES_API_KEY=026bbc0c5d22447ca082d6d50e575211
+ENV SECRET_KEY=supersecretkey
+ENV DEBUG=False
+ENV ALLOWED_HOSTS=api.scubadivedubai.com,dashboard.scubadivedubai.com,media.scubadivedubai.com,scubadivedubai.com
+ENV PLAYGROUND_ENABLED=True
+ENV AWS_MEDIA_BUCKET_NAME=scubadivedubai-api-media
+ENV AWS_STORAGE_BUCKET_NAME=scubadivedubai-api-static
+ENV AWS_ACCESS_KEY_ID=AKIAQPIWRSOP5NHI6LVH
+ENV AWS_SECRET_ACCESS_KEY=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
+ENV AWS_MEDIA_CUSTOM_DOMAIN=media.scubadivedubai.com
+ENV AWS_STATIC_CUSTOM_DOMAIN=static.scubadivedubai.com
+ENV ALLOWED_CLIENT_HOSTS=api.scubadivedubai.com,dashboard.scubadivedubai.com,media.scubadivedubai.com,scubadivedubai.com
+ENV DEFAULT_COUNTRY=AE
+ENV DEFAULT_CURRENCY=AED
+# ------
 
-ARG COMMIT_ID
-ARG VERSION
+RUN pip install -r requirements.txt
 
-LABEL org.opencontainers.image.title="mirumee/saleor"                                  \
-      org.opencontainers.image.description="\
-A modular, high performance, headless e-commerce platform built with Python, \
-GraphQL, Django, and ReactJS."                                                         \
-      org.opencontainers.image.url="https://saleor.io/"                                \
-      org.opencontainers.image.source="https://github.com/mirumee/saleor"              \
-      org.opencontainers.image.revision=$COMMIT_ID                                     \
-      org.opencontainers.image.version=$VERSION                                        \
-      org.opencontainers.image.authors="Mirumee Software (https://mirumee.com)"        \
-      org.opencontainers.image.licenses="BSD 3"
+RUN npm install \ 
+  && npm run build-schema \
+  && npm run build-emails
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "saleor.asgi:application"]
+RUN python3 manage.py collectstatic --no-input
+
+CMD ["uwsgi", "--ini", "/app/saleor/wsgi/uwsgi.ini"]
+
