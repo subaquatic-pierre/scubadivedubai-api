@@ -28,7 +28,7 @@ RUN apt-get update \
   shared-mime-info \
   mime-support \
   curl \
-  uwsgi-plugin-python3 \
+  build-essential \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
