@@ -44,7 +44,7 @@ EXPOSE 3000
 
 # Environment vars for application, must be moved to secrets
 # ------
-ENV DATABASE_URL=postgres://scubadivedubai:ScubaDiveDubai0!@scubadivedubai-db.cluster-cguhuytcxcub.us-east-1.rds.amazonaws.com:5432/scubadivedubai_shop
+ENV DATABASE_URL=postgres://scubadivedubai:ScubaDiveDubai0!@scubadivedubai.cguhuytcxcub.us-east-1.rds.amazonaws.com:5432/scubadivedubai_shop
 ENV EMAIL_URL=smtp://AKIAQPIWRSOPQGTLNIVV:BM1OBPMJzVv4V3rSvA2Zv663y9CzOgrrZNuRj4oR0SyY@email-smtp.us-east-1.amazonaws.com:587/?tls=True
 ENV DEFAULT_FROM_EMAIL=pierre@divesandybeach.com
 ENV STATIC_URL=/static/
