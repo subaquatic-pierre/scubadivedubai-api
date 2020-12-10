@@ -70,6 +70,7 @@ ENV AWS_STATIC_CUSTOM_DOMAIN=static.scubadivedubai.com
 ENV ALLOWED_CLIENT_HOSTS=api.scubadivedubai.com,dashboard.scubadivedubai.com,media.scubadivedubai.com,scubadivedubai.com
 ENV DEFAULT_COUNTRY=AE
 ENV DEFAULT_CURRENCY=AED
+ENV GOOGLE_ANALYTICS_TRACKING_ID=somegoogletag
 # ------
 
 RUN pip install -r requirements.txt
