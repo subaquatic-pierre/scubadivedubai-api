@@ -73,6 +73,7 @@ ARG GOOGLE_ANALYTICS_TRACKING_ID
 
 # Environment vars for application, must be moved to secrets
 # ------
+<<<<<<< HEAD
 ENV DATABASE_URL=$DATABASE_URL
 ENV EMAIL_URL=$EMAIL_URL
 ENV DEFAULT_FROM_EMAIL=$DEFAULT_FROM_EMAIL
@@ -101,6 +102,36 @@ ENV ALLOWED_CLIENT_HOSTS=$ALLOWED_CLIENT_HOSTS
 ENV DEFAULT_COUNTRY=$DEFAULT_COUNTRY
 ENV DEFAULT_CURRENCY=$DEFAULT_CURRENCY
 ENV GOOGLE_ANALYTICS_TRACKING_ID=$GOOGLE_ANALYTICS_TRACKING_ID
+=======
+ENV DATABASE_URL=postgres://scubadivedubai:ScubaDiveDubai0!@scubadivedubai.cguhuytcxcub.us-east-1.rds.amazonaws.com:5432/scubadivedubai_shop
+ENV EMAIL_URL=smtp://AKIAQPIWRSOPQGTLNIVV:BM1OBPMJzVv4V3rSvA2Zv663y9CzOgrrZNuRj4oR0SyY@email-smtp.us-east-1.amazonaws.com:587/?tls=True
+ENV DEFAULT_FROM_EMAIL=pierre@divesandybeach.com
+ENV STATIC_URL=/static/
+ENV MEDIA_URL=/media/
+ENV CREATE_IMAGES_ON_DEMAND=True
+ENV API_URI=https://api.scubadivedubai.com/graphql/
+ENV APP_MOUNT_URI=https://dashboard.scubadivedubai.com
+ENV JAEGER_AGENT_HOST=jaeger
+ENV REDIS_URL=redis://redis:6379/0
+ENV PORT=3000
+ENV PYTHONUNBUFFERED=1
+ENV PROCESSES=4
+ENV OPENEXCHANGERATES_API_KEY=026bbc0c5d22447ca082d6d50e575211
+ENV SECRET_KEY=supersecretkey
+ENV DEBUG=False
+ENV ALLOWED_HOSTS=api.scubadivedubai.com,dashboard.scubadivedubai.com,media.scubadivedubai.com,scubadivedubai.com
+ENV PLAYGROUND_ENABLED=True
+ENV AWS_MEDIA_BUCKET_NAME=scubadivedubai-api-media
+ENV AWS_STORAGE_BUCKET_NAME=scubadivedubai-api-static
+ENV AWS_ACCESS_KEY_ID=AKIAQPIWRSOP5NHI6LVH
+ENV AWS_SECRET_ACCESS_KEY=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
+ENV AWS_MEDIA_CUSTOM_DOMAIN=media.scubadivedubai.com
+ENV AWS_STATIC_CUSTOM_DOMAIN=static.scubadivedubai.com
+ENV ALLOWED_CLIENT_HOSTS=api.scubadivedubai.com,dashboard.scubadivedubai.com,media.scubadivedubai.com,scubadivedubai.com
+ENV DEFAULT_COUNTRY=AE
+ENV DEFAULT_CURRENCY=AED
+ENV GOOGLE_ANALYTICS_TRACKING_ID=somegoogletag
+>>>>>>> c973ea9a63ba9eb132a8d6ba420e113e4305b105
 # ------
 
 RUN pip install -r requirements.txt
