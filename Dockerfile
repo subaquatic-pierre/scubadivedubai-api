@@ -112,6 +112,8 @@ RUN npm install \
 RUN echo $DEBUG
 
 RUN python3 manage.py collectstatic --no-input
+RUN echo ${EMAIL_URL}
+RUN echo "Defualt from email " ${DEFAULT_FROM_EMAIL}
 
 CMD ["uwsgi", "--ini", "/app/saleor/wsgi/uwsgi.ini"]
 
